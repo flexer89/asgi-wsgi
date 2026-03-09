@@ -1,4 +1,4 @@
-def compute_heavy_task(limit: int = 200_000) -> int:
+def compute_heavy_task(limit: int = 75_000) -> int:
     primes_count = 0
     
     for num in range(2, limit + 1):
