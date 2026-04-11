@@ -1,0 +1,50 @@
+services:
+  sync_app:
+    build: app/
+    container_name: falcon_sync
+    command: gunicorn main_sync:app --workers 4 --threads 1 --bind 0.0.0.0:8000 --log-level warning
+    ports:
+      - "8001:8000"
+    cpuset: "1"
+    memswap_limit: 512M
+    mem_swappiness: 0
+    shm_size: '256m'
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "none"
+
+  async_app:
+    build: app/
+    container_name: falcon_async
+    command: gunicorn main_async:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level warning
+    ports:
+      - "8002:8000"
+    cpuset: "4"
+    memswap_limit: 512M
+    mem_swappiness: 0
+    shm_size: '256m'
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '1.0'
+          memory: 512M
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    logging:
+      driver: "none"
